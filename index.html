@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ligma-OS</title>
+<style>
+:root{--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#262626;--a:#00ff7b;--ac:#03140a;--ad:#004d1a;--t:#fff;--t2:#aaa;--bd:#ffffff17;--sh:0 18px 50px #000a}
+[data-theme=light]{--bg:#eef1ef;--bg2:#fff;--bg3:#e3e8e5;--t:#111;--t2:#555;--bd:#0000001c;--sh:0 18px 50px #0004}
+*{box-sizing:border-box;margin:0}
+html{font-size:16px}
+body{background:var(--bg);color:var(--t);font:400 .9rem/1.4 "Segoe UI",Inter,system-ui,-apple-system,Roboto,sans-serif;height:100vh;overflow:hidden;user-select:none}
+button,input,select,textarea{font:inherit;color:inherit}
+svg{flex:none}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:#8884;border-radius:9px}
+:focus-visible{outline:2px solid var(--a);outline-offset:1px}
+.btn,.tb button{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:.35rem .75rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;transition:.15s}
+.btn:hover,.tb button:hover{border-color:var(--a)}
+.btn.pri{background:var(--a);color:var(--ac);border-color:var(--a);font-weight:600}
+.btn.dan{background:#c0392b;border-color:#c0392b;color:#fff}
+.tb{display:flex;gap:.3rem;padding:.4rem;border-bottom:1px solid var(--bd);align-items:center;flex-wrap:wrap}
+.tb button{padding:.3rem .45rem}
+.in{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:.35rem .6rem;width:100%;user-select:text}
+.in:focus{border-color:var(--a);outline:0}
+#boot,#lock,#setup,#off{position:fixed;inset:0;z-index:9000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;transition:opacity .5s}
+#boot .bar{width:200px;height:4px;background:var(--bg3);border-radius:4px;overflow:hidden}
+#boot .bar i{display:block;height:100%;background:var(--a);animation:ld 1.1s ease-out forwards}
+@keyframes ld{from{width:0}to{width:100%}}
+.logo{animation:pulse 1.6s infinite}@keyframes pulse{50%{opacity:.6}}
+#lock{background:radial-gradient(circle at 30% 20%,var(--ad),var(--bg) 60%);z-index:8000}
+#lock .big{font-size:4.5rem;font-weight:200}
+.card{background:var(--bg2);border:1px solid var(--bd);border-radius:16px;padding:1.6rem;width:min(92vw,380px);display:flex;flex-direction:column;gap:.7rem;box-shadow:var(--sh)}
+.card label{font-size:.8rem;color:var(--t2)}
+.shake{animation:sh .3s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#desktop{position:fixed;inset:0 0 3rem 0;background-size:cover}
+#icons{position:absolute;inset:0}
+.di{position:absolute;width:80px;padding:6px 2px;border-radius:10px;text-align:center;font-size:.75rem;cursor:default;display:flex;flex-direction:column;align-items:center;gap:4px;text-shadow:0 1px 3px #000}
+.di .ico{width:44px;height:44px;border-radius:12px;background:linear-gradient(145deg,var(--bg3),var(--bg2));border:1px solid var(--bd);display:grid;place-items:center;color:var(--a)}
+.di:hover,.di.s{background:#ffffff18}
+.di span{word-break:break-word;color:#fff}
+#widget{position:absolute;right:18px;top:14px;text-align:right;text-shadow:0 2px 8px #000;pointer-events:none;color:#fff}
+#widget b{font-size:2.6rem;font-weight:200;display:block;line-height:1}#widget span{color:#ddd}
+#wins{position:absolute;inset:0;pointer-events:none}
+.win{position:absolute;pointer-events:auto;background:var(--bg2);border:1px solid var(--bd);border-radius:12px;box-shadow:var(--sh);display:flex;flex-direction:column;overflow:hidden;animation:pop .18s ease-out;min-width:260px;min-height:160px}
+.win.f{border-color:color-mix(in srgb,var(--a) 55%,transparent);box-shadow:var(--sh),0 0 0 1px color-mix(in srgb,var(--a) 25%,transparent)}
+.win.min{display:none}.win.cl{opacity:0;transform:scale(.94);transition:.15s}.win.mx{border-radius:0}
+.win.sn{transition:left .15s,top .15s,width .15s,height .15s}
+@keyframes pop{from{opacity:0;transform:scale(.95)}}
+.wh{height:36px;display:flex;align-items:center;gap:.5rem;padding:0 .4rem 0 .8rem;background:var(--bg);flex:none;cursor:default;touch-action:none}
+.wh .ti{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.82rem}
+.wh .ico{color:var(--a)}
+.wh button{width:30px;height:26px;border:0;background:0;border-radius:6px;display:grid;place-items:center;cursor:pointer;color:var(--t2)}
+.wh button:hover{background:var(--bg3);color:var(--t)}.wh button.x:hover{background:#c0392b;color:#fff}
+.wb{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.rz{position:absolute;z-index:3;touch-action:none}.rz.r{right:-3px;top:8px;bottom:8px;width:7px;cursor:ew-resize}.rz.b{bottom:-3px;left:8px;right:8px;height:7px;cursor:ns-resize}.rz.c{right:-3px;bottom:-3px;width:14px;height:14px;cursor:nwse-resize}
+#snap{position:fixed;background:color-mix(in srgb,var(--a) 15%,transparent);border:2px solid var(--a);border-radius:12px;z-index:5000;display:none;pointer-events:none}
+#task{position:fixed;left:0;right:0;bottom:0;height:3rem;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--bd);display:flex;align-items:center;gap:.3rem;padding:0 .5rem;z-index:6000}
+#task .sb,.tk{height:2.3rem;border:0;background:0;border-radius:8px;display:flex;align-items:center;gap:.45rem;padding:0 .7rem;cursor:pointer;color:var(--t);position:relative;max-width:11rem}
+#task .sb{color:var(--a);padding:0 .6rem}
+#task .sb:hover,.tk:hover{background:var(--bg3)}
+.tk .ico{color:var(--a)}.tk span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem}
+.tk.f{background:var(--bg3)}.tk::after{content:"";position:absolute;bottom:2px;left:30%;right:30%;height:3px;border-radius:3px;background:var(--a);opacity:.4}.tk.f::after{opacity:1;left:20%;right:20%}
+.tk.m{opacity:.6}
+#tray{margin-left:auto;display:flex;align-items:center;gap:.2rem}
+#tray button{border:0;background:0;color:var(--t);height:2.3rem;padding:0 .55rem;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:.3rem}
+#tray button:hover{background:var(--bg3)}
+#clk{text-align:right;font-size:.75rem;line-height:1.2}
+#start{position:fixed;left:.5rem;bottom:3.5rem;width:min(94vw,520px);height:min(70vh,520px);background:var(--bg2);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--sh);z-index:6500;display:none;flex-direction:column;padding:1rem;gap:.8rem}
+#start.on{display:flex;animation:pop .15s}
+#apps{flex:1;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:.4rem;align-content:start}
+.ap{border:0;background:0;border-radius:10px;padding:.7rem .3rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;font-size:.8rem}
+.ap:hover,.ap:focus{background:var(--bg3)}.ap .ico{width:44px;height:44px;border-radius:12px;background:var(--bg3);display:grid;place-items:center;color:var(--a)}
+.sf{display:flex;align-items:center;gap:.5rem;border-top:1px solid var(--bd);padding-top:.7rem}.sf b{flex:1}
+#pop{position:fixed;right:.5rem;bottom:3.5rem;width:290px;background:var(--bg2);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh);z-index:6500;display:none;padding:1rem;max-height:60vh;overflow:auto}
+#pop.on{display:block;animation:pop .15s}
+.nt{padding:.5rem .6rem;border-radius:8px;background:var(--bg3);margin-bottom:.4rem;font-size:.8rem}.nt b{display:block;color:var(--a)}.nt.err b{color:#ff6b5b}
+#toasts{position:fixed;right:.8rem;bottom:3.6rem;display:flex;flex-direction:column;gap:.4rem;z-index:7000;pointer-events:none}
+.toast{pointer-events:auto;background:var(--bg2);border:1px solid var(--bd);border-left:3px solid var(--a);border-radius:10px;padding:.6rem .9rem;width:280px;box-shadow:var(--sh);animation:pop .2s}.toast.err{border-left-color:#ff6b5b}.toast b{display:block}.toast span{color:var(--t2);font-size:.8rem}
+.cm{position:fixed;z-index:9500;background:var(--bg2);border:1px solid var(--bd);border-radius:10px;padding:.3rem;min-width:180px;box-shadow:var(--sh);animation:pop .1s}
+.cm button{display:flex;width:100%;gap:.6rem;align-items:center;border:0;background:0;padding:.4rem .6rem;border-radius:6px;cursor:pointer;text-align:left}.cm button:hover{background:var(--ad)}.cm hr{border:0;border-top:1px solid var(--bd);margin:.3rem 0}
+.modal{position:fixed;inset:0;background:#0009;z-index:9400;display:grid;place-items:center}
+.box{background:var(--bg2);border:1px solid var(--bd);border-radius:14px;padding:1.2rem;width:min(92vw,420px);box-shadow:var(--sh);animation:pop .15s}
+.box h3{margin-bottom:.6rem}.mb{margin-bottom:1rem;user-select:text}.mf{display:flex;gap:.5rem;justify-content:flex-end}
+#off{z-index:9800;background:#000;color:#aaa}
+/* apps */
+.fa{display:flex;flex:1;min-height:0}.fs{width:150px;border-right:1px solid var(--bd);padding:.4rem;display:flex;flex-direction:column;gap:2px;overflow:auto}
+.fs button{border:0;background:0;display:flex;gap:.5rem;align-items:center;padding:.4rem .5rem;border-radius:6px;cursor:pointer;text-align:left}.fs button:hover{background:var(--bg3)}
+.fm{flex:1;display:flex;flex-direction:column;min-width:0}.lst{flex:1;overflow:auto;padding:.5rem;outline:0}
+.lst.grid{display:grid;grid-template-columns:repeat(auto-fill,92px);gap:.4rem;align-content:start}
+.lst .it{border-radius:8px;padding:.4rem;cursor:default;border:1px solid transparent}.lst .it:hover{background:var(--bg3)}.lst .it.s{background:var(--ad);border-color:var(--a)}.lst .it.dt{border-color:var(--a)}
+.lst.grid .it{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.2rem}.lst.grid svg{width:36px;height:36px;color:var(--a)}.lst.grid i,.lst.grid u{display:none}.lst.grid b{font-weight:400;font-size:.75rem;word-break:break-word}
+.lst.list .it{display:grid;grid-template-columns:20px 1fr 90px 160px;gap:.6rem;align-items:center}.lst.list svg{color:var(--a)}.lst.list i,.lst.list u{font-style:normal;text-decoration:none;color:var(--t2);font-size:.78rem}.lst.list b{font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.em{color:var(--t2);padding:1rem;text-align:center;grid-column:1/-1}.stt{padding:.3rem .8rem;border-top:1px solid var(--bd);color:var(--t2);font-size:.75rem}
+.term{flex:1;background:#0a0a0a;color:#d8ffe8;font:.85rem/1.45 "SF Mono",Consolas,"Liberation Mono",monospace;padding:.6rem;overflow:auto;user-select:text}.term .ln{display:flex;gap:.5rem}.term input{flex:1;background:0;border:0;outline:0;font:inherit;color:#fff}.term .ps{color:var(--a);white-space:nowrap}.term pre{font:inherit;white-space:pre-wrap;word-break:break-word}.term .e{color:#ff7b6b}.term .d{color:var(--a)}
+.ew{flex:1;position:relative;overflow:hidden;background:var(--bg)}.ew pre,.ew textarea{position:absolute;inset:0;margin:0;padding:.6rem;font:.85rem/1.5 "SF Mono",Consolas,monospace;white-space:pre;overflow:auto;border:0;tab-size:2;user-select:text}.ew pre{pointer-events:none;color:var(--t);overflow:hidden}.ew textarea{background:0;color:transparent;caret-color:var(--a);resize:none;outline:0}.ew textarea::selection{background:#00ff7b44;color:transparent}
+.tc{color:#7f8c8d}.ts{color:#e5c07b}.tn{color:#d19a66}.tk2{color:var(--a)}
+.fr{display:flex;gap:.3rem;padding:.4rem;border-bottom:1px solid var(--bd)}.fr input{max-width:160px}
+.bw{flex:1;position:relative;background:#fff}.bw iframe{width:100%;height:100%;border:0;background:#fff}
+.hm{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:1rem;overflow:auto}.hm .in{max-width:420px}
+.bm{display:flex;gap:.4rem;padding:.3rem .5rem;border-bottom:1px solid var(--bd);overflow:auto;font-size:.78rem}.bm button{border:0;background:var(--bg3);border-radius:6px;padding:.15rem .6rem;cursor:pointer;white-space:nowrap}
+.nb{font-size:.75rem;color:var(--t2);padding:.25rem .6rem;border-bottom:1px solid var(--bd);display:flex;gap:.6rem;align-items:center}
+.set{display:flex;flex:1;min-height:0}.set nav{width:160px;border-right:1px solid var(--bd);padding:.5rem;display:flex;flex-direction:column;gap:2px}.set nav button{border:0;background:0;padding:.5rem;border-radius:6px;text-align:left;cursor:pointer;display:flex;gap:.5rem;align-items:center}.set nav button.on,.set nav button:hover{background:var(--bg3)}
+.sp{flex:1;overflow:auto;padding:1rem;display:flex;flex-direction:column;gap:.9rem}.sp h2{font-size:1.1rem}.row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}.row.sp2{justify-content:space-between}
+.sw{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer}.sw.on{border-color:var(--t)}
+.wp{width:110px;height:68px;border-radius:8px;border:2px solid var(--bd);cursor:pointer}.wp.on{border-color:var(--a)}
+.tg{accent-color:var(--a);width:18px;height:18px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:.3rem .8rem;user-select:text}.kv span:nth-child(odd){color:var(--t2)}
+.cl{flex:1;display:flex;flex-direction:column;padding:.7rem;gap:.6rem}.cd{background:var(--bg);border-radius:10px;padding:.6rem .9rem;text-align:right;min-height:84px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}.cd small{color:var(--t2);min-height:1.2em}.cd b{font-size:2rem;font-weight:300;word-break:break-all}
+.ck{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;flex:1}.ck button{border:0;border-radius:10px;background:var(--bg3);font-size:1.1rem;cursor:pointer}.ck button:hover{filter:brightness(1.25)}.ck .o{background:var(--ad)}.ck .q{background:var(--a);color:var(--ac)}
+.hs{max-height:120px;overflow:auto;font-size:.78rem;color:var(--t2);border-top:1px solid var(--bd);padding-top:.4rem;user-select:text}
+.sc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.7rem}.mc{background:var(--bg3);border-radius:10px;padding:.8rem}.mc b{font-size:1.5rem;font-weight:300;display:block}.mc small{color:var(--t2)}
+.pg{height:6px;background:var(--bg);border-radius:6px;overflow:hidden;margin-top:.4rem}.pg i{display:block;height:100%;background:var(--a);transition:width .4s}
+table{border-collapse:collapse;width:100%}td,th{text-align:left;padding:.35rem .5rem;border-bottom:1px solid var(--bd)}
+.sr{display:flex;gap:.8rem;align-items:center;background:var(--bg3);border-radius:12px;padding:.8rem}.sr .ico{width:44px;height:44px;border-radius:12px;background:var(--bg);display:grid;place-items:center;color:var(--a)}.sr div{flex:1}.sr small{color:var(--t2)}
+.tag{font-size:.7rem;background:var(--ad);color:var(--a);border-radius:5px;padding:.05rem .4rem}
+@media(max-width:700px){.fs{display:none}.tk span,#clk span{display:none}.set nav{width:52px}.set nav span{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="boot"><div class="logo" id="bl"></div><div style="letter-spacing:.3em;font-weight:300">LIGMA-OS</div><div class="bar"><i></i></div><small style="color:var(--t2)">Ligma Technologies</small></div>
+<div id="desktop"><div id="icons"></div><div id="widget"><b id="wt"></b><span id="wd"></span></div></div>
+<div id="wins"></div><div id="snap"></div>
+<div id="start"><input class="in" id="ss" placeholder="Search apps" aria-label="Search apps"><div id="apps"></div><div class="sf"><b id="su"></b><button class="btn" id="sl" title="Lock"></button><button class="btn" id="sr" title="Restart"></button><button class="btn dan" id="sp" title="Shut down"></button></div></div>
+<div id="pop"></div><div id="toasts"></div>
+<div id="task"><button class="sb" id="sb" title="Start (Ctrl+Space)"></button><div id="run" style="display:flex;gap:.2rem;overflow:hidden"></div>
+<div id="tray"><button id="tv" title="Volume"></button><button id="tn" title="Notifications"></button><button id="tl" title="Lock"></button><button id="clk"></button></div></div>
+
+<script>
+"use strict";
+/* ============ utils ============ */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const fmt=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(1)+' MB';
+const I={folder:'M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z',file:'M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z|M14 2v4a2 2 0 0 0 2 2h4',terminal:'m4 17 6-6-6-6|M12 19h8',globe:'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z|M2 12h20|M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10Z',sliders:'M4 21v-7|M4 10V3|M12 21v-9|M12 8V3|M20 21v-5|M20 12V3|M1 14h6|M9 8h6|M17 16h6',calc:'M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z|M8 6h8|M8 11h.01|M12 11h.01|M16 11h.01|M8 15h.01|M12 15h.01|M16 15h.01|M8 19h.01|M12 19h.01|M16 19h.01',edit:'M12 20h9|M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z',bag:'M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z|M3 6h18|M16 10a4 4 0 0 1-8 0',act:'M22 12h-4l-3 9L9 3l-3 9H2',user:'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2|M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z',lock:'M5 11h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2Z|M7 11V7a5 5 0 0 1 10 0v4',power:'M18.4 6.6a9 9 0 1 1-12.8 0|M12 2v10',search:'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z|m21 21-4.3-4.3',grid:'M3 3h7v7H3z|M14 3h7v7h-7z|M14 14h7v7h-7z|M3 14h7v7H3z',list:'M8 6h13|M8 12h13|M8 18h13|M3 6h.01|M3 12h.01|M3 18h.01',left:'m12 19-7-7 7-7|M19 12H5',right:'M5 12h14|m12 5 7 7-7 7',up:'m5 12 7-7 7 7|M12 19V5',refresh:'M3 12a9 9 0 0 1 9-9 9.8 9.8 0 0 1 6.7 2.7L21 8|M21 3v5h-5|M21 12a9 9 0 0 1-9 9 9.8 9.8 0 0 1-6.7-2.7L3 16|M8 16H3v5',star:'m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8-6.2-3.2-6.2 3.2L7 14.2 2 9.3l6.9-1Z',plus:'M5 12h14|M12 5v14',trash:'M3 6h18|M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6|M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2',copy:'M8 8h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2Z|M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2',cut:'M6 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z|M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z|M20 4 8.1 15.9|M14.5 14.5 20 20|M8.1 8.1 12 12',x:'M18 6 6 18|M6 6l12 12',min:'M5 12h14',max:'M5 5h14v14H5z',rest:'M8 8h12v12H8z|M4 16V4h12',vol:'M11 5 6 9H2v6h4l5 4Z|M15.5 8.5a5 5 0 0 1 0 7|M19 5a10 10 0 0 1 0 14',bell:'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9|M10.3 21a1.9 1.9 0 0 0 3.4 0',home:'m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z|M9 22V12h6v10',info:'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z|M12 16v-4|M12 8h.01',fplus:'M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z|M12 10v6|M9 13h6',filep:'M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z|M12 18v-6|M9 15h6',clip:'M8 2h8v4H8z|M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2',rot:'M3 12a9 9 0 1 0 3-6.7L3 8|M3 3v5h5',ext:'M15 3h6v6|M10 14 21 3|M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6',check:'M20 6 9 17l-5-5',hand:'M18 11V6a2 2 0 0 0-4 0v5|M14 10V4a2 2 0 0 0-4 0v6|M10 10.5V6a2 2 0 0 0-4 0v8|M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-5.9-2.4L3.4 16a2 2 0 0 1 3-2.7L8 15'};
+const ic=(n,s=18)=>`<svg class="ico" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${(I[n]||I.file).split('|').map(d=>`<path d="${d}"/>`).join('')}</svg>`;
+const LOGO=(s=72)=>`<svg width="${s}" height="${s}" viewBox="0 0 64 64"><rect x="4" y="4" width="56" height="56" rx="16" fill="#004d1a"/><path d="M22 14v30a4 4 0 0 0 4 4h18" fill="none" stroke="#00ff7b" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+/* ============ preferences ============ */
+const DEF={user:'',name:'',pin:'',wall:0,accent:'#00ff7b',theme:'dark',scale:100,notif:true,sound:true,vol:60,startup:[],installed:['files','terminal','settings','store','browser','calc','editor','monitor','welcome'],bm:[['Wikipedia','https://en.wikipedia.org'],['OpenStreetMap','https://www.openstreetmap.org']],pos:{},fview:'grid',welcomed:false};
+let P=Object.assign({},DEF);
+try{Object.assign(P,JSON.parse(localStorage.getItem('ligma.prefs')||'{}'))}catch(e){}
+const savePrefs=()=>{try{localStorage.setItem('ligma.prefs',JSON.stringify(P))}catch(e){toast('Storage error','Preferences could not be saved: '+e.message,1)}};
+const WALLS=[['Ligma Night','radial-gradient(ellipse at 20% 10%,#004d1a 0,transparent 55%),radial-gradient(ellipse at 90% 90%,#00331a 0,transparent 50%),#0f0f0f'],['Deep Moss','linear-gradient(135deg,#0f0f0f,#004d1a)'],['Graphite','linear-gradient(160deg,#262626,#0f0f0f 60%,#1a1a1a)'],['Aurora','radial-gradient(circle at 70% 20%,#00ff7b55,transparent 40%),radial-gradient(circle at 20% 80%,#0a5c4a,transparent 45%),#0f0f0f']];
+function applyPrefs(){const r=document.documentElement;r.dataset.theme=P.theme;r.style.setProperty('--a',P.accent);const h=P.accent.slice(1),l=(parseInt(h.slice(0,2),16)*.3+parseInt(h.slice(2,4),16)*.6+parseInt(h.slice(4,6),16)*.1);r.style.setProperty('--ac',l>110?'#03140a':'#fff');r.style.fontSize=16*P.scale/100+'px';$('#desktop').style.background=WALLS[P.wall][1]}
+
+/* ============ virtual filesystem (IndexedDB) ============ */
+const FS={m:new Map(),db:null,subs:new Set(),ok:true,t:0,
+init(){return new Promise(res=>{try{const r=indexedDB.open('ligma-os',1);r.onupgradeneeded=()=>r.result.createObjectStore('fs',{keyPath:'path'});r.onsuccess=()=>{FS.db=r.result;const g=r.result.transaction('fs').objectStore('fs').getAll();g.onsuccess=()=>{g.result.forEach(e=>FS.m.set(e.path,e));res()};g.onerror=()=>{FS.ok=false;res()}};r.onerror=()=>{FS.ok=false;res()}}catch(e){FS.ok=false;res()}})},
+tx(f){if(!FS.db)return;try{const t=FS.db.transaction('fs','readwrite');f(t.objectStore('fs'));t.onerror=()=>toast('Storage error',String(t.error&&t.error.message),1)}catch(e){toast('Storage error',e.message,1)}},
+fire(){cancelAnimationFrame(FS.t);FS.t=requestAnimationFrame(()=>FS.subs.forEach(f=>f()))},
+put(e){FS.m.set(e.path,e);FS.tx(s=>s.put(e));FS.fire()},del(p){FS.m.delete(p);FS.tx(s=>s.delete(p));FS.fire()},
+norm(p,cwd='/'){if(p==='~'||p.startsWith('~/'))p=HOME()+p.slice(1);const o=[];for(const s of(p.startsWith('/')?p:cwd+'/'+p).split('/')){if(!s||s==='.')continue;s==='..'?o.pop():o.push(s)}return '/'+o.join('/')},
+name:p=>p.split('/').pop()||'/',dir:p=>p.slice(0,p.lastIndexOf('/'))||'/',join:(d,n)=>(d==='/'?'':d)+'/'+n,
+get:p=>FS.m.get(p),
+ls(d){const pre=d==='/'?'/':d+'/';return[...FS.m.values()].filter(e=>e.path!=='/'&&e.path.startsWith(pre)&&!e.path.slice(pre.length).includes('/')).sort((a,b)=>(a.type===b.type?0:a.type==='dir'?-1:1)||a.path.localeCompare(b.path))},
+under:p=>[...FS.m.values()].filter(e=>e.path===p||e.path.startsWith(p+'/')),
+size:p=>FS.under(p).reduce((n,e)=>n+(e.content||'').length,0),
+prot:p=>['/','/home','/system','/apps',HOME(),...['Desktop','Documents','Downloads','Pictures','Music','Videos'].map(d=>HOME()+'/'+d)].includes(p),
+valid:n=>!!n&&!/[\/\0]/.test(n)&&n!=='.'&&n!=='..'&&n.length<=100,
+mk(p,type,c=''){if(FS.m.has(p))throw Error('"'+FS.name(p)+'" already exists here.');const d=FS.m.get(FS.dir(p));if(!d||d.type!=='dir')throw Error('The parent folder does not exist.');if(!FS.valid(FS.name(p)))throw Error('Names cannot be empty or contain "/".');FS.put({path:p,type,content:type==='file'?c:'',mtime:Date.now()})},
+write(p,c){const e=FS.m.get(p);if(e&&e.type==='dir')throw Error('That path is a folder.');e?FS.put({...e,content:c,mtime:Date.now()}):FS.mk(p,'file',c)},
+rm(p){if(FS.prot(p))throw Error('System folders are protected and cannot be removed.');FS.under(p).forEach(e=>FS.del(e.path))},
+cp(a,b){if(FS.m.has(b))throw Error('"'+FS.name(b)+'" already exists in the destination.');const d=FS.m.get(FS.dir(b));if(!d||d.type!=='dir')throw Error('Destination folder does not exist.');if(b===a||b.startsWith(a+'/'))throw Error('A folder cannot be copied into itself.');if(!FS.valid(FS.name(b)))throw Error('Invalid name.');FS.under(a).forEach(e=>FS.put({...e,path:b+e.path.slice(a.length),mtime:Date.now()}))},
+mv(a,b){if(a===b)return;if(FS.prot(a))throw Error('System folders are protected and cannot be moved.');FS.cp(a,b);FS.under(a).forEach(e=>FS.del(e.path))},
+uniq(p){if(!FS.m.has(p))return p;const d=FS.dir(p),n=FS.name(p),i=n.lastIndexOf('.'),b=i>0?n.slice(0,i):n,x=i>0?n.slice(i):'';let k=1,c;do{c=FS.join(d,b+' copy'+(k>1?' '+k:'')+x);k++}while(FS.m.has(c));return c},
+seed(){const u=P.user,H='/home/'+u,now=Date.now();['/','/home',H,H+'/Desktop',H+'/Documents',H+'/Downloads',H+'/Pictures',H+'/Music',H+'/Videos','/system','/apps'].forEach(p=>{if(!FS.m.has(p))FS.put({path:p,type:'dir',content:'',mtime:now})});
+const f=(p,c)=>{if(!FS.m.has(p))FS.put({path:p,type:'file',content:c,mtime:now})};
+f(H+'/Documents/welcome.txt','Welcome to Ligma-OS, '+P.name+'.\n\nThis file lives in a virtual filesystem stored in your browser (IndexedDB).\nIt is not a file on your computer.\n');
+f('/system/os-release','NAME="Ligma-OS"\nVERSION="1.0"\nVENDOR="Ligma Technologies"\n');f('/apps/README.txt','Installed apps are managed in the Ligma App Store.\n')}};
+const HOME=()=>'/home/'+P.user;
+
+/* ============ ui helpers ============ */
+let AC=null;const NOTES=[];
+function beep(){if(!P.sound||!P.vol)return;try{AC=AC||new AudioContext();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=880;g.gain.value=P.vol/400;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.1)}catch(e){}}
+function toast(t,m='',err){NOTES.unshift({t,m,err,at:new Date()});if(NOTES.length>30)NOTES.pop();if(!P.notif&&!err)return;const d=el('div','toast'+(err?' err':''),`<b>${esc(t)}</b><span>${esc(m)}</span>`);$('#toasts').append(d);beep();setTimeout(()=>{d.style.opacity=0;setTimeout(()=>d.remove(),300)},4200)}
+function modal(title,html,btns,ready){return new Promise(res=>{const o=el('div','modal',`<div class="box" role="dialog" aria-label="${esc(title)}"><h3>${esc(title)}</h3><div class="mb">${html}</div><div class="mf"></div></div>`),f=$('.mf',o),done=v=>{o.remove();res(v)};btns.forEach(([l,v,c])=>{const b=el('button','btn '+(c||''),esc(l));b.onclick=()=>done(typeof v==='function'?v(o):v);f.append(b)});o.onkeydown=e=>{e.stopPropagation();if(e.key==='Escape')done(null);if(e.key==='Enter'&&e.target.tagName==='INPUT')f.lastChild.click()};document.body.append(o);ready&&ready(o);($('input,select',o)||f.firstChild).focus()})}
+const ask=(m,ok='Delete')=>modal('Are you sure?',`<p>${esc(m)}</p>`,[['Cancel',false],[ok,true,'dan']]);
+const ask2=(m,v='')=>modal(m,`<input class="in" value="${esc(v)}">`,[['Cancel',null],['OK',o=>$('input',o).value.trim()||null,'pri']]);
+function cm(x,y,items){closeCM();const m=el('div','cm');m.id='cm';items.forEach(i=>{if(i==='-')return m.append(el('hr'));const b=el('button','',(i.i?ic(i.i,15):'<span style="width:15px"></span>')+esc(i.l));b.onclick=()=>{closeCM();i.f()};m.append(b)});document.body.append(m);m.style.left=Math.min(x,innerWidth-m.offsetWidth-6)+'px';m.style.top=Math.min(y,innerHeight-m.offsetHeight-6)+'px'}
+const closeCM=()=>{const m=$('#cm');m&&m.remove()};
+const closeMenus=()=>{closeCM();$('#start').classList.remove('on');$('#pop').classList.remove('on')};
+document.addEventListener('pointerdown',e=>{if(!e.target.closest('#cm'))closeCM();if(!e.target.closest('#start,#sb,#pop,#tray'))closeMenus()});
+const safe=f=>{try{return f()}catch(e){toast('Action failed',e.message,1)}};
+const openPath=p=>{const e=FS.get(p);if(!e)return toast('Not found',p+' no longer exists.',1);e.type==='dir'?WM.open('files',{path:p}):WM.open('editor',{path:p})};
+
+/* ============ window manager ============ */
+const WM={w:new Map(),z:10,n:0,
+area:()=>({W:innerWidth,H:innerHeight-parseFloat(getComputedStyle(document.documentElement).fontSize)*3}),
+open(id,o={}){const A=APPS[id];if(!A)return;if(!P.installed.includes(id))return toast('App not installed','Install '+A.n+' from the App Store first.',1);
+ const ex=[...WM.w.values()].find(x=>x.app===id&&(A.single||(o.path&&x.path===o.path)));if(ex){WM.focus(ex);return ex}
+ const{W,H}=WM.area(),[sw,sh]=A.size,ww=Math.min(sw,W-10),wh=Math.min(sh,H-10),k=WM.n++%8;
+ const e=el('div','win',`<div class="wh">${ic(A.i,16)}<div class="ti">${esc(A.n)}</div><button class="n" title="Minimise" aria-label="Minimise">${ic('min',14)}</button><button class="m" title="Maximise" aria-label="Maximise">${ic('max',13)}</button><button class="x" title="Close" aria-label="Close">${ic('x',14)}</button></div><div class="wb"></div><div class="rz r"></div><div class="rz b"></div><div class="rz c"></div>`);
+ e.tabIndex=-1;const w={id:'w'+Date.now()+Math.random(),app:id,el:e,body:$('.wb',e),path:o.path,z:0,prev:null,min:false,setTitle:t=>$('.ti',e).textContent=t};
+ e.style.cssText=`left:${Math.max(0,Math.min(60+k*30,W-ww))}px;top:${Math.max(0,Math.min(30+k*30,H-wh))}px;width:${ww}px;height:${wh}px`;
+ $('#wins').append(e);WM.w.set(w.id,w);
+ e.addEventListener('pointerdown',()=>WM.focus(w),true);
+ $('.n',e).onclick=()=>WM.minimise(w);$('.m',e).onclick=()=>WM.toggleMax(w);$('.x',e).onclick=()=>WM.close(w);
+ const h=$('.wh',e);h.ondblclick=ev=>{if(!ev.target.closest('button'))WM.toggleMax(w)};h.onpointerdown=ev=>{if(ev.target.closest('button'))return;WM.drag(w,ev)};
+ $$('.rz',e).forEach(r=>r.onpointerdown=ev=>WM.resize(w,ev,r.className.replace('rz ','')));
+ try{A.open(w,o)}catch(err){toast(A.n+' crashed',err.message,1);WM.close(w,1);return}
+ if(W<700)WM.toggleMax(w);WM.focus(w);WM.render();return w},
+focus(w){if(w.min){w.min=false;w.el.classList.remove('min')}w.z=++WM.z;w.el.style.zIndex=w.z;WM.w.forEach(x=>x.el.classList.toggle('f',x===w));WM.render();if(!w.el.contains(document.activeElement))w.el.focus({preventScroll:true})},
+top(){return[...WM.w.values()].filter(w=>!w.min).sort((a,b)=>b.z-a.z)[0]},
+minimise(w){w.min=true;w.el.classList.remove('f');w.el.classList.add('min');const t=WM.top();t?WM.focus(t):WM.render()},
+close(w,now){if(w.cleanup)try{w.cleanup()}catch(e){}WM.w.delete(w.id);const f=()=>{w.el.remove();const t=WM.top();t&&WM.focus(t);WM.render()};if(now)f();else{w.el.classList.add('cl');setTimeout(f,150)}},
+setRect(w,r,snap){const s=w.el.style;w.el.classList.toggle('sn',!!snap);s.left=r.x+'px';s.top=r.y+'px';s.width=r.w+'px';s.height=r.h+'px';if(snap)setTimeout(()=>w.el.classList.remove('sn'),200)},
+rect:w=>({x:w.el.offsetLeft,y:w.el.offsetTop,w:w.el.offsetWidth,h:w.el.offsetHeight}),
+toggleMax(w){const{W,H}=WM.area();if(w.prev){WM.setRect(w,w.prev,1);w.prev=null;w.el.classList.remove('mx')}else{w.prev=WM.rect(w);WM.setRect(w,{x:0,y:0,w:W,h:H},1);w.el.classList.add('mx')}},
+zone(x,y){const{W,H}=WM.area();if(y<6)return{x:0,y:0,w:W,h:H};if(x<6)return{x:0,y:0,w:W/2,h:H};if(x>W-6)return{x:W/2,y:0,w:W/2,h:H};return null},
+drag(w,ev){const e=w.el,sx=ev.clientX,sy=ev.clientY;let r0=WM.rect(w),moved=false,z=null;const sn=$('#snap');
+ const mv=m=>{if(!moved&&Math.hypot(m.clientX-sx,m.clientY-sy)<4)return;if(!moved){moved=true;if(w.prev){const p=w.prev;w.prev=null;e.classList.remove('mx');const rx=(sx-r0.x)/r0.w;r0={x:sx-p.w*rx,y:r0.y,w:p.w,h:p.h};WM.setRect(w,r0)}}
+  e.style.left=r0.x+m.clientX-sx+'px';e.style.top=Math.max(0,Math.min(r0.y+m.clientY-sy,WM.area().H-36))+'px';z=WM.zone(m.clientX,m.clientY);if(z){Object.assign(sn.style,{display:'block',left:z.x+'px',top:z.y+'px',width:z.w+'px',height:z.h+'px'})}else sn.style.display='none'};
+ const up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);sn.style.display='none';if(moved&&z){w.prev=WM.rect(w);WM.setRect(w,z,1);e.classList.toggle('mx',z.w>=WM.area().W)}};
+ addEventListener('pointermove',mv);addEventListener('pointerup',up)},
+resize(w,ev,k){ev.preventDefault();if(w.prev){w.prev=null;w.el.classList.remove('mx')}const r=WM.rect(w),sx=ev.clientX,sy=ev.clientY,{W,H}=WM.area();
+ const mv=m=>{const s=w.el.style;if(k!=='b')s.width=Math.max(280,Math.min(r.w+m.clientX-sx,W-r.x))+'px';if(k!=='r')s.height=Math.max(180,Math.min(r.h+m.clientY-sy,H-r.y))+'px'};
+ const up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up)};addEventListener('pointermove',mv);addEventListener('pointerup',up)},
+cycle(){const l=[...WM.w.values()].sort((a,b)=>b.z-a.z);if(l.length>1)WM.focus(l[1])},
+render(){const r=$('#run');r.innerHTML='';[...WM.w.values()].forEach(w=>{const A=APPS[w.app],b=el('button','tk'+(w.el.classList.contains('f')?' f':'')+(w.min?' m':''),ic(A.i,16)+'<span>'+esc($('.ti',w.el).textContent)+'</span>');b.title=A.n;b.onclick=()=>{w.min||w.el.classList.contains('f')?(w.min?WM.focus(w):WM.minimise(w)):WM.focus(w)};r.append(b)})}};
+
+/* ============ desktop icons, start menu, tray ============ */
+function desk(){const D=$('#icons');D.innerHTML='';const rows=Math.max(1,Math.floor(($('#desktop').offsetHeight-10)/94));
+ const L=[...['files','terminal','browser','settings'].filter(a=>P.installed.includes(a)).map(a=>({k:'app:'+a,n:APPS[a].n,i:APPS[a].i,f:()=>WM.open(a)})),...FS.ls(HOME()+'/Desktop').map(e=>({k:e.path,n:FS.name(e.path),i:e.type==='dir'?'folder':'file',p:e.path,f:()=>openPath(e.path)}))];
+ L.forEach((it,n)=>{const d=el('div','di',`<div class="ico">${ic(it.i,26)}</div><span>${esc(it.n)}</span>`),p=P.pos[it.k]||{x:10+Math.floor(n/rows)*88,y:10+(n%rows)*94};d.style.cssText=`left:${p.x}px;top:${p.y}px`;d.tabIndex=0;
+  d.ondblclick=it.f;d.onkeydown=e=>{if(e.key==='Enter')it.f()};
+  d.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();const m=[{l:'Open',i:'folder',f:it.f}];if(it.p)m.push({l:'Rename',i:'edit',f:()=>renameItem(it.p)},{l:'Delete',i:'trash',f:()=>delItems([it.p])});cm(e.clientX,e.clientY,m)};
+  d.onpointerdown=e=>{if(e.button)return;$$('.di.s').forEach(x=>x.classList.remove('s'));d.classList.add('s');const sx=e.clientX,sy=e.clientY,ox=d.offsetLeft,oy=d.offsetTop;let mv=false;
+   const m=ev=>{if(!mv&&Math.hypot(ev.clientX-sx,ev.clientY-sy)<5)return;mv=true;d.style.left=Math.max(0,ox+ev.clientX-sx)+'px';d.style.top=Math.max(0,oy+ev.clientY-sy)+'px'};
+   const u=()=>{removeEventListener('pointermove',m);removeEventListener('pointerup',u);if(mv){P.pos[it.k]={x:d.offsetLeft,y:d.offsetTop};savePrefs()}};addEventListener('pointermove',m);addEventListener('pointerup',u)};
+  D.append(d)})}
+$('#desktop').oncontextmenu=e=>{e.preventDefault();const H=HOME()+'/Desktop';cm(e.clientX,e.clientY,[{l:'New folder',i:'fplus',f:()=>newItem(H,'dir')},{l:'New text file',i:'filep',f:()=>newItem(H,'file')},{l:'Paste',i:'clip',f:()=>pasteInto(H)},'-',{l:'Open Files',i:'folder',f:()=>WM.open('files')},{l:'Personalise',i:'sliders',f:()=>WM.open('settings')},{l:'Refresh',i:'refresh',f:desk}])};
+$('#desktop').onpointerdown=e=>{if(e.target.id==='desktop'||e.target.id==='icons')$$('.di.s').forEach(x=>x.classList.remove('s'))};
+$('#desktop').ondragover=e=>e.preventDefault();$('#desktop').ondrop=e=>{e.preventDefault();const ps=safe(()=>JSON.parse(e.dataTransfer.getData('text/ligma')||'[]'))||[];ps.forEach(p=>safe(()=>FS.mv(p,FS.uniq(FS.join(HOME()+'/Desktop',FS.name(p))))))};
+const Start={render(q=''){const g=$('#apps');g.innerHTML='';Object.entries(APPS).filter(([k,a])=>P.installed.includes(k)&&!a.hid&&a.n.toLowerCase().includes(q.toLowerCase())).forEach(([k,a])=>{const b=el('button','ap',`<div class="ico">${ic(a.i,24)}</div>${esc(a.n)}`);b.onclick=()=>{closeMenus();WM.open(k)};g.append(b)})},
+ toggle(){const s=$('#start'),on=!s.classList.contains('on');closeMenus();if(on){s.classList.add('on');$('#ss').value='';Start.render();$('#ss').focus()}}};
+$('#ss').oninput=e=>Start.render(e.target.value);$('#ss').onkeydown=e=>{if(e.key==='Enter'){const b=$('#apps .ap');b&&b.click()}};
+$('#sb').onclick=Start.toggle;$('#sl').onclick=()=>{closeMenus();lockScreen()};$('#tl').onclick=lockScreen;$('#sr').onclick=()=>power('reboot');$('#sp').onclick=()=>power('off');
+function pop(html,bind){const p=$('#pop'),was=p.dataset.k;closeMenus();if(was===html.slice(0,20)&&0)return;p.innerHTML=html;p.classList.add('on');bind&&bind(p)}
+$('#tv').onclick=()=>pop(`<div class="row"><label for="vs">Volume</label><input id="vs" type="range" min="0" max="100" value="${P.vol}" style="flex:1;accent-color:var(--a)"><span id="vn">${P.vol}</span></div><label class="row" style="margin-top:.6rem"><input type="checkbox" class="tg" id="vm" ${P.sound?'checked':''}> System sounds</label>`,p=>{$('#vs',p).oninput=e=>{P.vol=+e.target.value;$('#vn',p).textContent=P.vol;savePrefs()};$('#vs',p).onchange=beep;$('#vm',p).onchange=e=>{P.sound=e.target.checked;savePrefs()}});
+$('#tn').onclick=()=>pop(`<div class="row sp2"><b>Notifications</b><button class="btn" id="nc">Clear</button></div><div style="margin-top:.6rem">${NOTES.length?NOTES.map(n=>`<div class="nt ${n.err?'err':''}"><b>${esc(n.t)}</b>${esc(n.m)}<br><small style="color:var(--t2)">${n.at.toLocaleTimeString()}</small></div>`).join(''):'<p class="em">No notifications.</p>'}</div>`,p=>{$('#nc',p).onclick=()=>{NOTES.length=0;closeMenus()}});
+$('#clk').onclick=()=>pop(`<b>${new Date().toLocaleDateString([],{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</b>`);
+function tick(){const d=new Date();$('#clk').innerHTML=`${d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}<span><br>${d.toLocaleDateString([],{day:'numeric',month:'short',year:'numeric'})}</span>`;$('#wt').textContent=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});$('#wd').textContent=d.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'})}
+$('#bl').innerHTML=LOGO();$('#sb').innerHTML=LOGO(22);$('#tv').innerHTML=ic('vol');$('#tn').innerHTML=ic('bell');$('#tl').innerHTML=ic('lock');$('#sl').innerHTML=ic('lock');$('#sr').innerHTML=ic('rot');$('#sp').innerHTML=ic('power');
+
+/* ============ files helpers ============ */
+const CB={mode:'copy',paths:[]};
+async function newItem(dir,type){const n=await ask2(type==='dir'?'New folder name':'New file name',type==='dir'?'New folder':'untitled.txt');if(n)safe(()=>FS.mk(FS.join(dir,n),type))}
+async function renameItem(p){const n=await ask2('Rename',FS.name(p));if(n&&n!==FS.name(p))safe(()=>FS.mv(p,FS.join(FS.dir(p),n)))}
+async function delItems(ps){if(!ps.length)return;if(await ask(ps.length===1?`Delete "${FS.name(ps[0])}"? This cannot be undone.`:`Delete ${ps.length} items? This cannot be undone.`))ps.forEach(p=>safe(()=>FS.rm(p)))}
+function pasteInto(d){if(!CB.paths.length)return toast('Nothing to paste','Copy or cut something first.',1);CB.paths.forEach(p=>safe(()=>{if(!FS.get(p))throw Error(FS.name(p)+' no longer exists.');const t=FS.uniq(FS.join(d,FS.name(p)));CB.mode==='cut'?FS.mv(p,t):FS.cp(p,t)}));if(CB.mode==='cut')CB.paths=[]}
+function props(p){const e=FS.get(p);if(!e)return;const n=FS.under(p).length-1;modal('Properties',`<div class="kv"><span>Name</span><span>${esc(FS.name(p))}</span><span>Type</span><span>${e.type==='dir'?'Folder':'File'}</span><span>Location</span><span>${esc(FS.dir(p))}</span><span>Size</span><span>${fmt(FS.size(p))}</span>${e.type==='dir'?`<span>Contains</span><span>${n} item(s)</span>`:''}<span>Modified</span><span>${new Date(e.mtime).toLocaleString()}</span><span>Storage</span><span>Virtual (browser IndexedDB), not a host file</span></div>`,[['Close',null,'pri']])}
+
+/* ============ apps ============ */
+const APPS={};
+APPS.files={n:'Ligma Files',i:'folder',size:[840,520],open(w,o){
+ let p=o.path||HOME(),v=P.fview,sel=new Set(),q='',H=[p],hi=0;
+ const places=[['Home',HOME(),'home'],['Desktop',HOME()+'/Desktop','folder'],['Documents',HOME()+'/Documents','folder'],['Downloads',HOME()+'/Downloads','folder'],['Pictures',HOME()+'/Pictures','folder'],['Music',HOME()+'/Music','folder'],['Videos',HOME()+'/Videos','folder'],['System','/system','folder'],['Apps','/apps','folder'],['Root','/','folder']];
+ const B=(a,i,t)=>`<button data-a="${a}" title="${t}" aria-label="${t}">${ic(i,16)}</button>`;
+ w.body.innerHTML=`<div class="fa"><div class="fs">${places.map(x=>`<button data-go="${esc(x[1])}">${ic(x[2],16)}${x[0]}</button>`).join('')}</div><div class="fm"><div class="tb">${B('back','left','Back')}${B('fwd','right','Forward')}${B('up','up','Up')}<input class="in" id="pi" style="flex:1;min-width:120px" aria-label="Path"><input class="in" id="qi" placeholder="Search" style="width:130px" aria-label="Search">${B('nf','fplus','New folder')}${B('nt','filep','New file')}${B('cut','cut','Cut')}${B('copy','copy','Copy')}${B('paste','clip','Paste')}${B('view','list','Toggle view')}</div><div class="lst" tabindex="0"></div><div class="stt"></div></div></div>`;
+ const L=$('.lst',w.body),PI=$('#pi',w.body),selp=()=>[...sel].filter(x=>FS.get(x));
+ const go=(d,push=1)=>{const e=FS.get(d);if(!e||e.type!=='dir')return toast('Cannot open folder',d+' is not a folder.',1);p=d;sel.clear();q='';$('#qi',w.body).value='';if(push){H=H.slice(0,hi+1);H.push(d);hi=H.length-1}r()};
+ const r=()=>{if(!FS.get(p)){p=HOME();}const pre=p==='/'?'/':p+'/',it=q?[...FS.m.values()].filter(e=>e.path!=='/'&&e.path.startsWith(pre)&&FS.name(e.path).toLowerCase().includes(q)):FS.ls(p);
+  L.className='lst '+v;PI.value=p;w.setTitle('Files — '+FS.name(p));
+  L.innerHTML=it.length?it.map(e=>`<div class="it${sel.has(e.path)?' s':''}" draggable="true" data-p="${esc(e.path)}" title="${esc(e.path)}">${ic(e.type==='dir'?'folder':'file',20)}<b>${esc(FS.name(e.path))}</b><i>${e.type==='dir'?'Folder':fmt((e.content||'').length)}</i><u>${new Date(e.mtime).toLocaleString()}</u></div>`).join(''):`<p class="em">${q?'No files match your search.':'This folder is empty. Right-click to create something.'}</p>`;
+  $('.stt',w.body).textContent=`${it.length} item(s)${sel.size?' · '+sel.size+' selected':''}${FS.ok?'':' · Storage unavailable: changes will not persist'}`;$('[data-a=view]',w.body).innerHTML=ic(v==='grid'?'list':'grid',16)};
+ FS.subs.add(r);w.cleanup=()=>FS.subs.delete(r);
+ w.body.onclick=e=>{const a=e.target.closest('[data-a]'),g=e.target.closest('[data-go]');if(g)return go(g.dataset.go);if(!a)return;({back:()=>hi>0&&go(H[--hi],0),fwd:()=>hi<H.length-1&&go(H[++hi],0),up:()=>p!=='/'&&go(FS.dir(p)),nf:()=>newItem(p,'dir'),nt:()=>newItem(p,'file'),cut:()=>{CB.mode='cut';CB.paths=selp()},copy:()=>{CB.mode='copy';CB.paths=selp()},paste:()=>pasteInto(p),view:()=>{v=v==='grid'?'list':'grid';P.fview=v;savePrefs();r()}})[a.dataset.a]()};
+ PI.onkeydown=e=>{if(e.key==='Enter')go(FS.norm(PI.value.trim()||'/'))};$('#qi',w.body).oninput=e=>{q=e.target.value.toLowerCase();r()};
+ L.onclick=e=>{const t=e.target.closest('.it');if(!t){sel.clear();return r()}if(e.ctrlKey||e.metaKey)sel.has(t.dataset.p)?sel.delete(t.dataset.p):sel.add(t.dataset.p);else{sel.clear();sel.add(t.dataset.p)}r()};
+ L.ondblclick=e=>{const t=e.target.closest('.it');if(t)FS.get(t.dataset.p).type==='dir'?go(t.dataset.p):openPath(t.dataset.p)};
+ L.oncontextmenu=e=>{e.preventDefault();const t=e.target.closest('.it');if(t){if(!sel.has(t.dataset.p)){sel.clear();sel.add(t.dataset.p);r()}const s=selp();cm(e.clientX,e.clientY,[{l:'Open',i:'folder',f:()=>openPath(s[0])},{l:'Cut',i:'cut',f:()=>{CB.mode='cut';CB.paths=s}},{l:'Copy',i:'copy',f:()=>{CB.mode='copy';CB.paths=s}},{l:'Rename',i:'edit',f:()=>renameItem(s[0])},{l:'Delete',i:'trash',f:()=>delItems(s)},'-',{l:'Properties',i:'info',f:()=>props(s[0])}])}else cm(e.clientX,e.clientY,[{l:'New folder',i:'fplus',f:()=>newItem(p,'dir')},{l:'New file',i:'filep',f:()=>newItem(p,'file')},{l:'Paste',i:'clip',f:()=>pasteInto(p)},'-',{l:'Properties',i:'info',f:()=>props(p)}])};
+ L.onkeydown=e=>{const s=selp(),k=e.key.toLowerCase();if(e.key==='Delete')delItems(s);else if(e.key==='F2'&&s[0])renameItem(s[0]);else if(e.key==='Enter'&&s[0])openPath(s[0]);else if(e.ctrlKey&&k==='c'){CB.mode='copy';CB.paths=s}else if(e.ctrlKey&&k==='x'){CB.mode='cut';CB.paths=s}else if(e.ctrlKey&&k==='v')pasteInto(p);else if(e.ctrlKey&&k==='a'){e.preventDefault();FS.ls(p).forEach(x=>sel.add(x.path));r()}else if(e.key==='Backspace')p!=='/'&&go(FS.dir(p))};
+ L.ondragstart=e=>{const t=e.target.closest('.it');if(!t)return;if(!sel.has(t.dataset.p)){sel.clear();sel.add(t.dataset.p)}e.dataTransfer.setData('text/ligma',JSON.stringify(selp()))};
+ L.ondragover=e=>{e.preventDefault();$$('.dt',L).forEach(x=>x.classList.remove('dt'));const t=e.target.closest('.it');t&&FS.get(t.dataset.p).type==='dir'&&t.classList.add('dt')};
+ L.ondrop=e=>{e.preventDefault();const t=e.target.closest('.it'),d=t&&FS.get(t.dataset.p).type==='dir'?t.dataset.p:p,ps=safe(()=>JSON.parse(e.dataTransfer.getData('text/ligma')||'[]'))||[];ps.forEach(x=>{if(FS.dir(x)!==d)safe(()=>FS.mv(x,FS.uniq(FS.join(d,FS.name(x)))))})};
+ r()}};
+
+APPS.terminal={n:'Ligma Terminal',i:'terminal',size:[700,430],open(w){
+ let cwd=HOME(),hist=[],hp=0;w.body.innerHTML=`<div class="term"><div class="out"></div><div class="ln"><span class="ps"></span><input spellcheck="false" autocomplete="off" aria-label="Command"></div></div>`;
+ const T=$('.term',w.body),O=$('.out',w.body),inp=$('input',w.body),ps=$('.ps',w.body);
+ const pr=(h,c='')=>{O.append(el('pre',c,h));T.scrollTop=T.scrollHeight},pe=s=>pr(esc(s),'e'),setps=()=>ps.textContent=`${P.user}@ligma:${cwd.replace(HOME(),'~')}$`;
+ const R=a=>FS.norm(a,cwd),need=(p,t)=>{const e=FS.get(p);if(!e)throw Error(p+': No such file or directory');if(t&&e.type!==t)throw Error(p+(t==='dir'?': Not a directory':': Is a directory'));return e};
+ const C={help(){pr('Commands: help clear ls cd pwd mkdir touch cat echo rm mv cp date time whoami neofetch apps open reboot shutdown\nUse "echo text > file" to write files, "ls -l" for details, "open <app>" to launch apps.')},
+  clear(){O.innerHTML=''},pwd(){pr(esc(cwd))},whoami(){pr(esc(P.user))},
+  date(){pr(new Date().toLocaleDateString([],{weekday:'long',day:'numeric',month:'long',year:'numeric'}))},time(){pr(new Date().toLocaleTimeString())},
+  ls(a){const l=a.includes('-l'),t=a.find(x=>!x.startsWith('-')),p=t?R(t):cwd,e=need(p);const it=e.type==='dir'?FS.ls(p):[e];pr(it.length?it.map(x=>{const n=`<span class="${x.type==='dir'?'d':''}">${esc(FS.name(x.path))}${x.type==='dir'?'/':''}</span>`;return l?`${x.type==='dir'?'d':'-'}  ${String(FS.size(x.path)).padStart(8)}  ${new Date(x.mtime).toLocaleString()}  ${n}`:n}).join(l?'\n':'  '):'')},
+  cd(a){const p=a[0]?R(a[0]):HOME();need(p,'dir');cwd=p;setps()},
+  mkdir(a){if(!a.length)throw Error('mkdir: missing operand');a.forEach(x=>FS.mk(R(x),'dir'))},
+  touch(a){if(!a.length)throw Error('touch: missing operand');a.forEach(x=>{const p=R(x);FS.get(p)?FS.write(p,FS.get(p).content):FS.mk(p,'file')})},
+  cat(a){if(!a.length)throw Error('cat: missing operand');a.forEach(x=>pr(esc(need(R(x),'file').content)))},
+  echo(a){const i=a.findIndex(x=>x==='>'||x==='>>');if(i<0)return pr(esc(a.join(' ')));const f=a[i+1];if(!f)throw Error('echo: missing file after '+a[i]);const p=R(f),t=a.slice(0,i).join(' ');FS.write(p,(a[i]==='>>'&&FS.get(p)?FS.get(p).content:'')+t+'\n')},
+  async rm(a){const f=a.filter(x=>!x.startsWith('-'));if(!f.length)throw Error('rm: missing operand');for(const x of f){const p=R(x),e=need(p);if(e.type==='dir'&&!a.some(y=>/^-.*r/.test(y)))throw Error('rm: '+x+': is a directory (use rm -r)');if(e.type==='dir'&&!await ask('Delete folder "'+x+'" and everything in it?'))continue;FS.rm(p)}},
+  mv(a){if(a.length!==2)throw Error('usage: mv <source> <dest>');const s=R(a[0]),d=R(a[1]);need(s);const t=FS.get(d);FS.mv(s,t&&t.type==='dir'?FS.join(d,FS.name(s)):d)},
+  cp(a){if(a.length!==2)throw Error('usage: cp <source> <dest>');const s=R(a[0]),d=R(a[1]);need(s);const t=FS.get(d);FS.cp(s,t&&t.type==='dir'?FS.join(d,FS.name(s)):d)},
+  apps(){pr(Object.entries(APPS).map(([k,a])=>`${k.padEnd(10)} ${a.n}${P.installed.includes(k)?'':'  (not installed)'}`).join('\n'))},
+  open(a){const k=a[0];if(!APPS[k])throw Error('open: unknown app "'+(k||'')+'". Run "apps" to list them.');WM.open(k)},
+  neofetch(){const s=Math.round(FS.size('/')/1024*10)/10;pr(`<span class="d">  _     ___ ____ __  __    _\n | |   |_ _/ ___|  \\/  |  / \\\n | |    | | |  _| |\\/| | / _ \\\n | |___ | | |_| | |  | |/ ___ \\\n |_____|___\\____|_|  |_/_/   \\_\\</span>\n<span class="d">${esc(P.user)}@ligma</span>\nOS:       Ligma-OS 1.0 (Ligma Technologies)\nHost:     ${esc(navigator.platform||'browser')}\nShell:    ligma-sh\nTerminal: Ligma Terminal\nCPU:      ${navigator.hardwareConcurrency||'?'} logical cores\nMemory:   ${navigator.deviceMemory?navigator.deviceMemory+' GB (approx.)':'not exposed by browser'}\nDisk:     ${s} KB used in virtual FS\nApps:     ${P.installed.length} installed, ${WM.w.size} running`)},
+  reboot(){pr('Rebooting...');setTimeout(()=>power('reboot'),400)},shutdown(){pr('Shutting down...');setTimeout(()=>power('off'),400)}};
+ const run=async l=>{pr(`<span class="ps">${esc(ps.textContent)}</span> ${esc(l)}`);const a=[...l.matchAll(/"([^"]*)"|'([^']*)'|(\S+)/g)].map(m=>m[1]??m[2]??m[3]);const c=a.shift();if(!c)return;if(!Object.hasOwn(C,c))return pe(`${c}: command not found. Type "help".`);try{await C[c](a)}catch(e){pe(e.message)}};
+ inp.onkeydown=e=>{e.stopPropagation();if(e.key==='Enter'){const l=inp.value;inp.value='';if(l.trim()){hist.push(l);hp=hist.length}run(l)}else if(e.key==='ArrowUp'){e.preventDefault();hp=Math.max(0,hp-1);inp.value=hist[hp]||''}else if(e.key==='ArrowDown'){hp=Math.min(hist.length,hp+1);inp.value=hist[hp]||''}else if(e.key==='l'&&e.ctrlKey){e.preventDefault();C.clear()}};
+ T.onclick=()=>{if(!getSelection().toString())inp.focus()};w.focusEl=inp;setps();pr('Ligma Terminal — type "help" for commands.');setTimeout(()=>inp.focus(),50)}};
+
+APPS.browser={n:'Ligma Browser',i:'globe',size:[940,600],open(w){
+ let H=['ligma:home'],hi=0;
+ w.body.innerHTML=`<div class="tb"><button data-a="b" title="Back">${ic('left',16)}</button><button data-a="f" title="Forward">${ic('right',16)}</button><button data-a="r" title="Refresh">${ic('refresh',16)}</button><button data-a="h" title="Home">${ic('home',16)}</button><input class="in" id="ad" style="flex:1" placeholder="Search Wikipedia or enter an address" aria-label="Address"><button data-a="s" title="Bookmark this page">${ic('star',16)}</button><button data-a="x" title="Open in a new tab">${ic('ext',16)}</button></div><div class="bm"></div><div class="nb">${ic('info',14)}Many sites forbid being shown inside other pages. If a page stays blank, use “Open in a new tab”.</div><div class="bw"><iframe sandbox="allow-scripts allow-same-origin allow-forms allow-popups" referrerpolicy="no-referrer" title="Web page"></iframe><div class="hm"></div></div>`;
+ const F=$('iframe',w.body),HM=$('.hm',w.body),AD=$('#ad',w.body),cur=()=>H[hi];
+ const res=s=>{s=s.trim();if(!s||s==='ligma:home')return'ligma:home';if(/^https?:\/\//i.test(s))return s;if(/^[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?$/.test(s))return'https://'+s;return'https://en.wikipedia.org/w/index.php?search='+encodeURIComponent(s)};
+ const bms=()=>{$('.bm',w.body).innerHTML=P.bm.map((b,i)=>`<button data-i="${i}" title="${esc(b[1])} (right-click to remove)">${esc(b[0])}</button>`).join('')||'<small style="color:var(--t2)">No bookmarks yet. Use the star to add one.</small>'};
+ const show=()=>{const u=cur(),h=u==='ligma:home';HM.style.display=h?'flex':'none';AD.value=h?'':u;w.setTitle(h?'Ligma Browser — Home':'Ligma Browser — '+u);if(!h)F.src=u;else F.removeAttribute('src');const st=$('[data-a=s]',w.body);st.style.color=P.bm.some(b=>b[1]===u)?'var(--a)':''};
+ const nav=s=>{const u=res(s);H=H.slice(0,hi+1);H.push(u);hi=H.length-1;show()};
+ HM.innerHTML=`<div>${LOGO(64)}</div><h2 style="font-weight:300">Ligma Browser</h2><input class="in" id="hs" placeholder="Search Wikipedia" aria-label="Search"><div class="row"><button class="btn pri" id="hg">Search</button><button class="btn" id="hw">Search the web (new tab)</button></div><div class="row" id="ht"></div>`;
+ const hrender=()=>$('#ht',HM).innerHTML=P.bm.map((b,i)=>`<button class="btn" data-i="${i}">${esc(b[0])}</button>`).join('');
+ $('#hg',HM).onclick=()=>nav($('#hs',HM).value);$('#hs',HM).onkeydown=e=>{e.stopPropagation();if(e.key==='Enter')nav(e.target.value)};
+ $('#hw',HM).onclick=()=>window.open('https://duckduckgo.com/?q='+encodeURIComponent($('#hs',HM).value),'_blank','noopener');
+ w.body.onclick=e=>{const i=e.target.closest('[data-i]');if(i&&P.bm[i.dataset.i])return nav(P.bm[i.dataset.i][1]);const a=e.target.closest('[data-a]');if(!a)return;const k=a.dataset.a;
+  if(k==='b'&&hi>0){hi--;show()}else if(k==='f'&&hi<H.length-1){hi++;show()}else if(k==='r'){cur()==='ligma:home'?0:F.src=cur()}else if(k==='h')nav('ligma:home');
+  else if(k==='x'){cur()==='ligma:home'?toast('Nothing to open','Load a page first.',1):window.open(cur(),'_blank','noopener')}
+  else if(k==='s'){if(cur()==='ligma:home')return toast('Cannot bookmark','Open a page first.',1);const j=P.bm.findIndex(b=>b[1]===cur());j>=0?P.bm.splice(j,1):P.bm.push([cur().replace(/^https?:\/\/(www\.)?/,'').slice(0,24),cur()]);savePrefs();bms();hrender();show()}};
+ w.body.oncontextmenu=e=>{const i=e.target.closest('.bm [data-i]');if(i){e.preventDefault();cm(e.clientX,e.clientY,[{l:'Remove bookmark',i:'trash',f:()=>{P.bm.splice(i.dataset.i,1);savePrefs();bms();hrender();show()}}])}};
+ AD.onkeydown=e=>{e.stopPropagation();if(e.key==='Enter')nav(AD.value)};bms();hrender();show()}};
+
+APPS.editor={n:'Ligma Text Editor',i:'edit',size:[780,540],open(w,o){
+ let path=o.path||null,dirty=false,tm;
+ w.body.innerHTML=`<div class="tb"><button data-a="new" title="New">${ic('filep',16)}</button><button data-a="open" title="Open">${ic('folder',16)}</button><button data-a="save" title="Save (Ctrl+S)">${ic('check',16)} Save</button><button data-a="as">Save as</button><button data-a="find" title="Find and replace">${ic('search',16)}</button></div><div class="fr" hidden><input class="in" id="fi" placeholder="Find"><input class="in" id="ri" placeholder="Replace with"><button class="btn" data-a="next">Next</button><button class="btn" data-a="rep">Replace</button><button class="btn" data-a="all">Replace all</button></div><div class="ew"><pre aria-hidden="true"></pre><textarea spellcheck="false" aria-label="Editor"></textarea></div><div class="stt" style="display:flex;justify-content:space-between"><span id="st"></span><span id="ps"></span></div>`;
+ const TA=$('textarea',w.body),PR=$('pre',w.body),ST=$('#st',w.body),ext=()=>(path||'').split('.').pop().toLowerCase();
+ const hl=()=>{const t=TA.value,x=ext();if(!['js','json','css','html','py','ts'].includes(x)){PR.innerHTML=esc(t)+'\n ';return}let o='',i=0,m;const re=new RegExp((x==='py'?'(#.*)':'(\\/\\/.*)')+'|(\\/\\*[\\s\\S]*?\\*\\/|&lt;!--[\\s\\S]*?--&gt;)|("(?:\\\\.|[^"\\\\\\n])*"|\'(?:\\\\.|[^\'\\\\\\n])*\'|`(?:\\\\.|[^`\\\\])*`)|(\\b\\d+\\.?\\d*\\b)|(\\b(?:function|const|let|var|return|if|else|for|while|class|import|export|from|new|true|false|null|undefined|def|async|await|try|catch|throw|switch|case|break|this)\\b)','g');
+  while((m=re.exec(t))){if(m[0]==='')break;o+=esc(t.slice(i,m.index));o+=`<span class="${m[1]||m[2]?'tc':m[3]?'ts':m[4]?'tn':'tk2'}">${esc(m[0])}</span>`;i=re.lastIndex}PR.innerHTML=o+esc(t.slice(i))+'\n '};
+ const info=()=>{const b=TA.value.slice(0,TA.selectionStart).split('\n');$('#ps',w.body).textContent=`Ln ${b.length}, Col ${b[b.length-1].length+1} · ${TA.value.length} chars`;};
+ const title=()=>w.setTitle((dirty?'• ':'')+(path?FS.name(path):'Untitled')+' — Text Editor');
+ const sv=async(as,auto)=>{let p=path;if(!p||as){if(auto)return;const d=await ask2('Save as (path or file name)',p||HOME()+'/Documents/untitled.txt');if(!d)return;p=FS.norm(d.includes('/')?d:HOME()+'/Documents/'+d);if(FS.get(p)&&p!==path&&!await ask('"'+FS.name(p)+'" already exists. Overwrite it?','Overwrite'))return}
+  try{FS.write(p,TA.value);path=p;w.path=p;dirty=false;ST.textContent=(auto?'Autosaved ':'Saved ')+new Date().toLocaleTimeString();title();hl()}catch(e){toast('Could not save',e.message,1)}};
+ const load=p=>{const e=FS.get(p);if(!e||e.type!=='file'){toast('Cannot open file',p+' is not available.',1);return}path=p;w.path=p;TA.value=e.content;dirty=false;ST.textContent='Opened';title();hl();info()};
+ w.save=()=>sv(false);if(path)load(path);else{title();hl();info()}
+ TA.oninput=()=>{dirty=true;title();hl();info();ST.textContent=path?'Editing…':'Unsaved — press Ctrl+S';clearTimeout(tm);if(path)tm=setTimeout(()=>sv(false,1),900)};
+ TA.onscroll=()=>{PR.scrollTop=TA.scrollTop;PR.scrollLeft=TA.scrollLeft};TA.onkeyup=TA.onclick=info;
+ TA.onkeydown=e=>{if(e.key==='Tab'){e.preventDefault();const s=TA.selectionStart;TA.setRangeText('  ',s,TA.selectionEnd,'end');TA.oninput()}};
+ const FI=$('#fi',w.body),RI=$('#ri',w.body),nx=()=>{const f=FI.value;if(!f)return;let i=TA.value.indexOf(f,TA.selectionEnd);if(i<0)i=TA.value.indexOf(f);if(i<0)return ST.textContent='No matches';TA.focus();TA.setSelectionRange(i,i+f.length)};
+ w.body.onclick=async e=>{const a=e.target.closest('[data-a]');if(!a)return;const k=a.dataset.a;
+  if(k==='save')sv(false);else if(k==='as')sv(true);else if(k==='new'){if(dirty&&!await ask('Discard unsaved changes?','Discard'))return;path=null;w.path=null;TA.value='';dirty=false;title();hl();info()}
+  else if(k==='open'){const fl=[...FS.m.values()].filter(x=>x.type==='file').map(x=>x.path).sort(),c=await modal('Open file',fl.length?`<select class="in" size="8">${fl.map(x=>`<option>${esc(x)}</option>`).join('')}</select>`:'<p>No files yet.</p>',[['Cancel',null],['Open',o=>($('select',o)||{}).value||null,'pri']]);if(c)load(c)}
+  else if(k==='find'){const f=$('.fr',w.body);f.hidden=!f.hidden;if(!f.hidden)FI.focus()}
+  else if(k==='next')nx();
+  else if(k==='rep'){const f=FI.value;if(f&&TA.value.slice(TA.selectionStart,TA.selectionEnd)===f){TA.setRangeText(RI.value,TA.selectionStart,TA.selectionEnd,'end');TA.oninput()}nx()}
+  else if(k==='all'){const f=FI.value;if(!f)return;const n=TA.value.split(f).length-1;TA.value=TA.value.split(f).join(RI.value);TA.oninput();ST.textContent=n+' replaced'}};
+ FI.onkeydown=RI.onkeydown=e=>{e.stopPropagation();if(e.key==='Enter')nx()}}};
+
+APPS.calc={n:'Ligma Calculator',i:'calc',size:[310,480],single:1,open(w){
+ let cur='0',acc=null,op=null,fresh=true,hs=[];const K=[['C','±','%','÷'],['7','8','9','×'],['4','5','6','−'],['1','2','3','+'],['0','.','Del','=']];
+ w.body.innerHTML=`<div class="cl"><div class="cd"><small></small><b></b></div><div class="ck">${K.flat().map(k=>`<button data-k="${k}" class="${'÷×−+'.includes(k)?'o':k==='='?'q':''}">${k}</button>`).join('')}</div><div class="hs"></div></div>`;
+ const D=$('b',w.body),S=$('small',w.body),HS=$('.hs',w.body),n=()=>parseFloat(cur),f=x=>String(+x.toPrecision(12));
+ const draw=()=>{D.textContent=cur;S.textContent=acc!==null&&op?f(acc)+' '+op:'';HS.innerHTML=hs.length?hs.slice(-30).reverse().map(esc).join('<br>'):'History appears here.'};
+ const calc=()=>{const a=acc,b=n();let r;if(op==='+')r=a+b;else if(op==='−')r=a-b;else if(op==='×')r=a*b;else{if(b===0){cur='Cannot divide by zero';acc=null;op=null;fresh=true;return false}r=a/b}hs.push(`${f(a)} ${op} ${f(b)} = ${f(r)}`);cur=f(r);return true};
+ const press=k=>{if(cur==='Cannot divide by zero'&&k!=='C')cur='0';
+  if(/^\d$/.test(k)){cur=fresh||cur==='0'?k:cur+k;fresh=false}else if(k==='.'){if(fresh){cur='0.';fresh=false}else if(!cur.includes('.'))cur+='.'}
+  else if('+−×÷'.includes(k)){if(op&&!fresh){if(!calc())return draw()}acc=n();op=k;fresh=true}
+  else if(k==='='){if(op){if(!calc())return draw();op=null;acc=null;fresh=true}}
+  else if(k==='C'){cur='0';acc=null;op=null;fresh=true}else if(k==='±')cur=f(-n());else if(k==='%')cur=f(n()/100);else if(k==='Del'){cur=cur.length>1?cur.slice(0,-1):'0'}
+  draw()};
+ w.body.onclick=e=>{const b=e.target.closest('[data-k]');if(b)press(b.dataset.k)};
+ w.el.onkeydown=e=>{const m={'*':'×','/':'÷','-':'−','+':'+','Enter':'=','=':'=','Backspace':'Del','Escape':'C','.':'.',',':'.'},k=m[e.key]||(/^\d$/.test(e.key)?e.key:null);if(k&&!e.ctrlKey&&!e.altKey){e.preventDefault();press(k)}};draw()}};
+
+APPS.settings={n:'Ligma Settings',i:'sliders',size:[760,520],single:1,open(w){
+ const tabs=[['Appearance','sliders'],['Notifications','bell'],['Startup','power'],['Account','user'],['System','info']];let tab=0;
+ const hex=['#00ff7b','#00d4ff','#ffb800','#ff4d8d','#a78bfa','#ff6b35'];
+ const pages=[()=>`<h2>Appearance</h2><div class="row"><span>Theme</span><button class="btn ${P.theme==='dark'?'pri':''}" data-t="dark">Dark</button><button class="btn ${P.theme==='light'?'pri':''}" data-t="light">Light</button></div>
+ <div><p>Accent colour</p><div class="row" style="margin-top:.4rem">${hex.map(c=>`<div class="sw ${P.accent===c?'on':''}" data-c="${c}" style="background:${c}" role="button" aria-label="Accent ${c}"></div>`).join('')}<input type="color" value="${P.accent}" id="cc" aria-label="Custom accent"></div></div>
+ <div><p>Wallpaper</p><div class="row" style="margin-top:.4rem">${WALLS.map((x,i)=>`<div class="wp ${P.wall===i?'on':''}" data-w="${i}" style="background:${x[1]}" title="${x[0]}" role="button" aria-label="${x[0]}"></div>`).join('')}</div></div>
+ <div><label for="sc">Interface scale: <b id="sv">${P.scale}%</b></label><br><input id="sc" type="range" min="80" max="130" step="5" value="${P.scale}" style="width:100%;accent-color:var(--a)"></div>
+ <button class="btn" data-r="settings" style="align-self:flex-start">Reset settings</button>`,
+ ()=>`<h2>Notifications</h2><label class="row"><input type="checkbox" class="tg" id="nn" ${P.notif?'checked':''}> Show notification pop-ups (errors are always shown)</label><label class="row"><input type="checkbox" class="tg" id="ns" ${P.sound?'checked':''}> Play notification sound</label><div class="row"><button class="btn" id="nt">Send test notification</button></div>`,
+ ()=>`<h2>Startup applications</h2><p style="color:var(--t2)">These open automatically after you sign in.</p>${P.installed.filter(k=>!APPS[k].hid).map(k=>`<label class="row"><input type="checkbox" class="tg" data-s="${k}" ${P.startup.includes(k)?'checked':''}> ${ic(APPS[k].i,16)} ${esc(APPS[k].n)}</label>`).join('')}`,
+ ()=>`<h2>Account</h2><div class="kv"><span>Username</span><span>${esc(P.user)}</span><span>Home folder</span><span>${esc(HOME())}</span></div><div class="row"><label for="dn">Display name</label><input class="in" id="dn" style="max-width:220px" value="${esc(P.name)}"><button class="btn" id="dns">Save</button></div><div class="row"><span>PIN: ${P.pin?'set':'not set'}</span><button class="btn" id="pn">${P.pin?'Change PIN':'Set PIN'}</button>${P.pin?'<button class="btn" id="pc">Remove PIN</button>':''}</div><p style="color:var(--t2);font-size:.8rem">The PIN is a local convenience lock stored as a hash in this browser. It does not encrypt your files.</p><button class="btn dan" data-r="factory" style="align-self:flex-start">Factory reset (erase all data)</button>`,
+ ()=>`<h2>System information</h2><div class="kv" id="si"></div>`];
+ w.body.innerHTML=`<div class="set"><nav>${tabs.map((t,i)=>`<button data-tab="${i}">${ic(t[1],16)}<span>${t[0]}</span></button>`).join('')}</nav><div class="sp"></div></div>`;
+ const pg=$('.sp',w.body),draw=()=>{$$('nav button',w.body).forEach((b,i)=>b.classList.toggle('on',i===tab));pg.innerHTML=pages[tab]();if(tab===4)sys();pg.querySelectorAll('input[type=range]#sc').forEach(s=>{s.oninput=e=>$('#sv',pg).textContent=e.target.value+'%';s.onchange=e=>{P.scale=+e.target.value;savePrefs();applyPrefs();desk()}})};
+ const sys=async()=>{const k=$('#si',pg);let st='unavailable';try{const s=await navigator.storage.estimate();st=`${fmt(s.usage)} used of ${fmt(s.quota)} (browser origin)`}catch(e){}const rows=[['OS','Ligma-OS 1.0 by Ligma Technologies'],['Browser',navigator.userAgent],['Platform',navigator.platform||'unknown'],['Logical CPU cores',navigator.hardwareConcurrency||'not exposed'],['Device memory',navigator.deviceMemory?'~'+navigator.deviceMemory+' GB':'not exposed'],['Screen',screen.width+'×'+screen.height+' @'+devicePixelRatio+'x'],['Language',navigator.language],['Storage',st],['Virtual FS',fmt(FS.size('/'))+' in '+FS.m.size+' entries'+(FS.ok?'':' (memory only; IndexedDB unavailable)')]];k.innerHTML=rows.map(r=>`<span>${r[0]}</span><span>${esc(r[1])}</span>`).join('')};
+ w.body.onclick=async e=>{const t=e.target.closest('button,.sw,.wp');if(!t)return;const d=t.dataset;
+  if(d.tab!=null){tab=+d.tab;return draw()}
+  if(d.t){P.theme=d.t}else if(d.c){P.accent=d.c}else if(d.w!=null){P.wall=+d.w}
+  else if(d.r==='settings'){if(!await ask('Reset appearance, notification and startup settings? Your files and account are kept.','Reset'))return;Object.assign(P,{wall:0,accent:DEF.accent,theme:'dark',scale:100,notif:true,sound:true,vol:60,startup:[],pos:{},bm:DEF.bm,fview:'grid'})}
+  else if(d.r==='factory'){if(!await ask('This erases your account, preferences and every virtual file. This cannot be undone.','Erase everything'))return;localStorage.removeItem('ligma.prefs');if(FS.db){FS.db.close();indexedDB.deleteDatabase('ligma-os')}return setTimeout(()=>location.reload(),300)}
+  else if(t.id==='nt')return toast('Test notification','Notifications are working.');
+  else if(t.id==='dns'){const n=$('#dn',pg).value.trim();if(n){P.name=n;savePrefs();$('#su').textContent=n;toast('Saved','Display name updated.')}return}
+  else if(t.id==='pn'){const a=await modal('Set PIN','<input class="in" type="password" inputmode="numeric" placeholder="4–8 digits">',[['Cancel',null],['Save',o=>$('input',o).value,'pri']]);if(a==null)return;if(!/^\d{4,8}$/.test(a))return toast('Invalid PIN','Use 4 to 8 digits.',1);P.pin=await hash(a);savePrefs();toast('PIN set','Ligma-OS will ask for it when locked or started.');return draw()}
+  else if(t.id==='pc'){if(await ask('Remove the PIN? Anyone using this browser can open Ligma-OS.','Remove')){P.pin='';savePrefs();draw()}return}
+  else return;
+  savePrefs();applyPrefs();desk();draw()};
+ w.body.onchange=e=>{const t=e.target;if(t.id==='cc'){P.accent=t.value;savePrefs();applyPrefs();draw()}else if(t.id==='nn')P.notif=t.checked;else if(t.id==='ns')P.sound=t.checked;else if(t.dataset.s){P.startup=t.checked?[...P.startup,t.dataset.s]:P.startup.filter(x=>x!==t.dataset.s)}else return;savePrefs()};
+ draw()}};
+
+const CAT={browser:'Browse the web from inside Ligma-OS, with bookmarks and history.',calc:'Basic arithmetic with keyboard support and a history log.',editor:'Edit text files with syntax highlighting, find and replace, and autosave.',monitor:'See running apps, storage and live system activity.',terminal:'Command line for the virtual filesystem.',files:'Browse and organise your virtual files.',settings:'Personalise Ligma-OS.',store:'Install and remove apps.',welcome:'A quick tour of Ligma-OS.'};
+APPS.store={n:'Ligma App Store',i:'bag',size:[640,500],single:1,open(w){
+ const core=['files','terminal','settings','store','welcome'];
+ const r=()=>{w.body.innerHTML=`<div class="sp">${Object.entries(APPS).filter(([k,a])=>!a.hid).map(([k,a])=>{const ins=P.installed.includes(k);return`<div class="sr"><div class="ico">${ic(a.i,24)}</div><div><b>${esc(a.n)}</b> ${core.includes(k)?'<span class="tag">Built-in</span>':ins?'<span class="tag">Installed</span>':''}<br><small>${esc(CAT[k]||'')}</small></div>${core.includes(k)?'':`<button class="btn ${ins?'dan':'pri'}" data-k="${k}">${ins?'Uninstall':'Install'}</button>`}${ins?`<button class="btn" data-o="${k}">Open</button>`:''}</div>`}).join('')}</div>`};
+ w.body.onclick=async e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.o)return WM.open(b.dataset.o);const k=b.dataset.k;if(!k)return;
+  if(P.installed.includes(k)){if(!await ask(`Uninstall ${APPS[k].n}? You can reinstall it later.`,'Uninstall'))return;[...WM.w.values()].filter(x=>x.app===k).forEach(x=>WM.close(x,1));P.installed=P.installed.filter(x=>x!==k);P.startup=P.startup.filter(x=>x!==k);toast('Uninstalled',APPS[k].n+' was removed.')}
+  else{P.installed.push(k);toast('Installed',APPS[k].n+' is ready to use.')}savePrefs();desk();r()};r()}};
+
+APPS.monitor={n:'Ligma System Monitor',i:'act',size:[680,500],single:1,open(w){
+ w.body.innerHTML=`<div class="sp"><div class="sc"><div class="mc"><small>CPU load (simulated)</small><b id="c1"></b><div class="pg"><i id="c2"></i></div><canvas id="cv" width="220" height="40" style="width:100%;margin-top:.4rem"></canvas></div><div class="mc"><small id="m0">Memory</small><b id="m1"></b><div class="pg"><i id="m2"></i></div></div><div class="mc"><small>Browser storage</small><b id="s1"></b><div class="pg"><i id="s2"></i></div><small id="s3"></small></div><div class="mc"><small>UI responsiveness (measured)</small><b id="l1"></b><small>Event-loop delay</small></div></div><p style="color:var(--t2);font-size:.78rem">Browsers do not expose real CPU usage. CPU is simulated from the number of open windows; memory, storage and delay are real where your browser reports them.</p><h2>Running applications</h2><table><thead><tr><th>Application</th><th>Window</th><th></th></tr></thead><tbody id="pt"></tbody></table></div>`;
+ let cpu=8,hist=Array(55).fill(8),last=performance.now(),lag=0;const cv=$('#cv',w.body).getContext('2d');
+ const up=async()=>{const now=performance.now();lag=Math.max(0,now-last-1000);last=now;cpu=Math.max(2,Math.min(98,cpu+(Math.random()-.5)*10+(5+WM.w.size*6-cpu)*.15));hist.push(cpu);hist.shift();
+  $('#c1',w.body).textContent=cpu.toFixed(0)+'%';$('#c2',w.body).style.width=cpu+'%';$('#l1',w.body).textContent=lag.toFixed(0)+' ms';
+  const pm=performance.memory;let mt='Memory (not exposed by this browser)',mv='n/a',mp=0;if(pm){mt='JS heap memory';mv=fmt(pm.usedJSHeapSize);mp=pm.usedJSHeapSize/pm.jsHeapSizeLimit*100}else if(navigator.deviceMemory){mt='Device memory (approx.)';mv=navigator.deviceMemory+' GB'}
+  $('#m0',w.body).textContent=mt;$('#m1',w.body).textContent=mv;$('#m2',w.body).style.width=mp+'%';
+  try{const s=await navigator.storage.estimate();$('#s1',w.body).textContent=fmt(s.usage);$('#s2',w.body).style.width=Math.max(1,s.usage/s.quota*100)+'%';$('#s3',w.body).textContent='Virtual FS: '+fmt(FS.size('/'))+' of '+fmt(s.quota)}catch(e){$('#s1',w.body).textContent=fmt(FS.size('/'));$('#s3',w.body).textContent='Virtual FS size (quota unknown)'}
+  cv.clearRect(0,0,220,40);cv.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--a');cv.lineWidth=2;cv.beginPath();hist.forEach((v,i)=>{const x=i*4,y=40-v*.38;i?cv.lineTo(x,y):cv.moveTo(x,y)});cv.stroke();
+  $('#pt',w.body).innerHTML=[...WM.w.values()].map(x=>`<tr><td>${ic(APPS[x.app].i,15)} ${esc(APPS[x.app].n)}</td><td>${esc($('.ti',x.el).textContent)}${x.min?' (minimised)':''}</td><td><button class="btn dan" data-e="${x.id}">End</button></td></tr>`).join('')||'<tr><td colspan="3">No apps running.</td></tr>'};
+ w.body.onclick=e=>{const b=e.target.closest('[data-e]');if(b){const x=WM.w.get(b.dataset.e);x&&WM.close(x)}};
+ const t=setInterval(up,1000);w.cleanup=()=>clearInterval(t);up()}};
+
+APPS.welcome={n:'Welcome to Ligma-OS',i:'hand',size:[560,470],single:1,open(w){
+ w.body.innerHTML=`<div class="sp" style="align-items:flex-start"><div class="row">${LOGO(56)}<div><h2>Welcome, ${esc(P.name)}</h2><span style="color:var(--t2)">Ligma-OS by Ligma Technologies</span></div></div><p>Everything here runs in your browser. Your files are stored in a virtual filesystem (IndexedDB), never on your computer's real disk.</p><div class="row"><button class="btn pri" data-o="files">Open Files</button><button class="btn" data-o="terminal">Open Terminal</button><button class="btn" data-o="settings">Personalise</button><button class="btn" data-o="store">App Store</button></div><h2>Shortcuts</h2><div class="kv"><span>Ctrl + Space</span><span>Open the launcher</span><span>Ctrl + Alt + T</span><span>Terminal</span><span>Ctrl + Shift + E</span><span>Files</span><span>Alt + Q or Alt + Tab</span><span>Switch window (your OS may reserve Alt + Tab)</span><span>Ctrl + S</span><span>Save the current document</span><span>Esc</span><span>Close menus</span></div><p style="color:var(--t2)">Tip: drag a window to a screen edge to snap it, and right-click the desktop for more options.</p></div>`;
+ w.body.onclick=e=>{const b=e.target.closest('[data-o]');b&&WM.open(b.dataset.o)}}};
+
+/* ============ system: auth, lock, power, boot ============ */
+async function hash(s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('ligma:'+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return btoa('ligma:'+s)}}
+let UP=false;
+function lockScreen(){return new Promise(res=>{if($('#lock'))return;const l=el('div','',`<div class="big" id="lt"></div><div id="ld" style="color:var(--t2)"></div><div class="card" style="align-items:center;margin-top:1rem">${ic('user',36)}<b>${esc(P.name)}</b>${P.pin?'<input class="in" id="lp" type="password" inputmode="numeric" placeholder="Enter PIN" aria-label="PIN" autocomplete="off"><small id="le" style="color:#ff6b5b;min-height:1.2em"></small>':''}<button class="btn pri" id="lu">${P.pin?'Unlock':'Sign in'}</button></div>`);l.id='lock';document.body.append(l);
+ const t=()=>{const d=new Date();$('#lt',l).textContent=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});$('#ld',l).textContent=d.toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'})};t();const iv=setInterval(t,5000);
+ const go=async()=>{if(P.pin&&await hash($('#lp',l).value)!==P.pin){$('#le',l).textContent='Incorrect PIN. Try again.';$('.card',l).classList.remove('shake');void $('.card',l).offsetWidth;$('.card',l).classList.add('shake');$('#lp',l).select();return}clearInterval(iv);l.style.opacity=0;setTimeout(()=>{l.remove();res()},300)};
+ $('#lu',l).onclick=go;l.onkeydown=e=>{e.stopPropagation();if(e.key==='Enter')go()};($('#lp',l)||$('#lu',l)).focus()})}
+function power(mode){closeMenus();const o=el('div','',mode==='reboot'?`<div class="logo">${LOGO()}</div><span>Restarting…</span>`:`${LOGO(56)}<b>Ligma-OS is shut down</b><button class="btn pri" id="on">${ic('power',16)} Power on</button>`);o.id='off';o.style.opacity=0;document.body.append(o);requestAnimationFrame(()=>o.style.opacity=1);
+ if(mode==='reboot')setTimeout(()=>location.reload(),1200);else{$('#on',o).onclick=()=>location.reload();$('#on',o).focus()}}
+function setup(){return new Promise(res=>{const s=el('div','',`<div class="card"><div class="row">${LOGO(48)}<div><b style="font-size:1.2rem">Set up Ligma-OS</b><br><small style="color:var(--t2)">Create your local profile</small></div></div><label for="su1">Username (letters and numbers)</label><input class="in" id="su1" value="liam" maxlength="20" autocomplete="off"><label for="su2">Display name</label><input class="in" id="su2" placeholder="Your name" maxlength="30"><label for="su3">PIN (optional, 4–8 digits)</label><input class="in" id="su3" type="password" inputmode="numeric" maxlength="8"><small id="se" style="color:#ff6b5b;min-height:1.2em"></small><button class="btn pri" id="sg" style="justify-content:center">Create profile</button><small style="color:var(--t2)">Everything stays in this browser. Nothing is sent anywhere.</small></div>`);s.id='setup';document.body.append(s);$('#su2',s).focus();
+ $('#sg',s).onclick=async()=>{const u=$('#su1',s).value.trim().toLowerCase(),n=$('#su2',s).value.trim()||u,p=$('#su3',s).value,e=$('#se',s);if(!/^[a-z0-9]{1,20}$/.test(u))return e.textContent='Username must be 1–20 lowercase letters or numbers.';if(p&&!/^\d{4,8}$/.test(p))return e.textContent='PIN must be 4 to 8 digits.';P.user=u;P.name=n;P.pin=p?await hash(p):'';savePrefs();s.style.opacity=0;setTimeout(()=>{s.remove();res()},400)};s.onkeydown=e=>{if(e.key==='Enter')$('#sg',s).click()}})}
+function startDesktop(){UP=true;FS.seed();desk();tick();$('#su').textContent=P.name;Start.render();FS.subs.add(()=>desk());
+ if(!FS.ok)toast('Storage unavailable','IndexedDB is blocked, so files will not persist after a refresh.',1);
+ if(!P.welcomed){P.welcomed=true;savePrefs();WM.open('welcome')}P.startup.filter(k=>P.installed.includes(k)).forEach(k=>WM.open(k))}
+addEventListener('keydown',e=>{if(!UP||$('#lock'))return;const k=e.key.toLowerCase();
+ if(e.ctrlKey&&!e.altKey&&!e.shiftKey&&k===' '){e.preventDefault();Start.toggle()}
+ else if(e.ctrlKey&&e.altKey&&k==='t'){e.preventDefault();WM.open('terminal')}
+ else if(e.ctrlKey&&e.shiftKey&&k==='e'){e.preventDefault();WM.open('files')}
+ else if(e.altKey&&(k==='tab'||k==='q')){e.preventDefault();WM.cycle()}
+ else if(k==='escape'){closeMenus()}
+ else if(e.ctrlKey&&k==='s'){e.preventDefault();const t=WM.top();t&&t.save&&t.save()}},true);
+addEventListener('resize',()=>UP&&desk());
+setInterval(()=>UP&&tick(),1000);
+(async()=>{applyPrefs();await FS.init();await sleep(1200);const b=$('#boot');b.style.opacity=0;setTimeout(()=>b.remove(),500);
+ if(!P.user)await setup();else if(P.pin)await lockScreen();FS.seed&&0;startDesktop()})();
+</script>
+</body>
+</html>
